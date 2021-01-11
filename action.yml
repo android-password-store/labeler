@@ -1,17 +1,11 @@
 name: 'Labeler'
-description: 'Add labels to new pull requests based on the files that are changed'
+description: 'Add labels to new pull requests'
 author: 'GitHub'
 inputs: 
   repo-token:
     description: 'The GITHUB_TOKEN secret'
-  configuration-path:
-    description: 'The path for the label configurations'
-    default: '.github/labeler.yml'
-    required: false
-  sync-labels:
-    description: 'Whether or not to remove labels when matching files are reverted'
-    default: false
-    required: false
+  labels:
+    description: 'Comma separated list of labels to apply to the pull request'
 
 runs:
   using: 'node12'
