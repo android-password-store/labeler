@@ -1,17 +1,18 @@
 # Pull Request Labeler
-
-Pull request labeler triages PRs based on the paths that are modified in the PR.
-
 ## Usage
 
-### Create Workflow
+### Adding review requested label when a PR is opened
 
-Create a workflow (eg: `.github/workflows/labeler.yml` see [Creating a Workflow file](https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file)) to utilize the labeler action with content:
-
-```
+```yaml
 name: "Pull Request Labeler"
 on:
-- pull_request_target
+  pull_request:
+    types:
+      - opened
+      - review_requested
+  pull_request_review:
+    types:
+      - dismissed
 
 jobs:
   triage:
@@ -20,7 +21,30 @@ jobs:
     - uses: android-password-store/labeler@main
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        labels: "S-waiting-on-review"
+        labels-to-add: "S-waiting-on-review"
+```
+
+### Removing the review requested label when review is submitted
+
+```yaml
+name: "Pull Request Labeler"
+on:
+  pull_request_review:
+    types:
+      - submitted
+  pull_request:
+    types:
+      - closed
+      - review_request_removed
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: android-password-store/labeler@main
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        labels-to-remove: "S-waiting-on-review"
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the action can make calls to GitHub's rest API_

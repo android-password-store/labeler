@@ -4,7 +4,15 @@ import * as github from "@actions/github";
 async function run() {
   try {
     const token = core.getInput("repo-token", { required: true });
-    const labels = core.getInput("labels", { required: true }).split(",");
+    const labelsToAdd = core.getInput("labels-to-add", { required: false })?.split(",") ?? [];
+    const labelsToRemove = core.getInput("labels-to-remove", { required: false })?.split(",") ?? [];
+
+    if (labelsToAdd.length == 0 && labelsToRemove.length == 0) {
+      const errMsg = 'No labels were provided for addition or removal';
+      core.error(errMsg);
+      core.setFailed(errMsg);
+      return;
+    }
 
     const prNumber = getPrNumber();
     if (!prNumber) {
@@ -14,8 +22,11 @@ async function run() {
 
     const client = new github.GitHub(token);
 
-    if (labels.length > 0) {
-      await addLabels(client, prNumber, labels);
+    if (labelsToAdd.length > 0) {
+      await addLabels(client, prNumber, labelsToAdd);
+    }
+    if (labelsToRemove.length > 0) {
+      await removeLabels(client, prNumber, labelsToRemove)
     }
   } catch (error) {
     core.error(error);
@@ -43,6 +54,21 @@ async function addLabels(
     issue_number: prNumber,
     labels: labels
   });
+}
+
+async function removeLabels(
+  client: github.GitHub,
+  prNumber: number,
+  labels: string[],
+) {
+  for (const label in labels) {
+    await client.issues.removeLabel({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      issue_number: prNumber,
+      name: label,
+    });
+  }
 }
 
 run();

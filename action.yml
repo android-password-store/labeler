@@ -1,11 +1,13 @@
 name: 'Labeler'
-description: 'Add labels to new pull requests'
+description: 'Add/remove labels from pull requests'
 author: 'GitHub'
 inputs: 
   repo-token:
     description: 'The GITHUB_TOKEN secret'
-  labels:
+  labels-to-add:
     description: 'Comma separated list of labels to apply to the pull request'
+  labels-to-remove:
+    description: 'Comma separate list of labels to remove from the pull request'
 
 runs:
   using: 'node12'
