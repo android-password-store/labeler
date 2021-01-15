@@ -4,6 +4,7 @@ author: 'GitHub'
 inputs: 
   repo-token:
     description: 'The GITHUB_TOKEN secret'
+    required: true
   labels-to-add:
     description: 'Comma separated list of labels to apply to the pull request'
   labels-to-remove:

@@ -56,4 +56,5 @@ Various inputs are defined in [`action.yml`](action.yml) to let you configure th
 | Name | Description | Default |
 | - | - | - |
 | `repo-token` | Token to use to authorize label changes. Typically the GITHUB_TOKEN secret | N/A |
-| `labels` | Comma separated list of labels to apply to the pull request | N/A |
+| `labels-to-add` | Comma separated list of labels to apply to the pull request | N/A |
+| `labels-to-remove` | Comma separate list of labels to remove from the pull request | N/A |
